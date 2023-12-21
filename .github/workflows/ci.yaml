@@ -1,0 +1,40 @@
+name: build and run tests
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+    # Install dependencies
+    - name: Install googletest
+      uses: cvpkg/googletest-action@v0.1
+      with:
+        googletest_tag: 'release-1.11.0'
+
+    - name: .pre 
+      working-directory: ${{runner.workspace}}
+      shell: bash
+      run: |         
+          pip install wheel
+          pip install cpplint   
+
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    # - name: Check code style
+    #   shell: bash
+    #   run: python -m cpplint --recursive src/* 
+
+    # Build project
+    - name: build
+      shell: bash
+      run: make build
+
+    # run tests
+    - name: test
+      shell: bash
+      run: make test 
