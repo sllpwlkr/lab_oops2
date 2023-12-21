@@ -11,20 +11,22 @@
 template <typename T, size_t BlockSize>
 class MyAllocator {
 public:
-    using value_type = T;
-    using pointer = T*;
-    using size_type = size_t;
+    using value_type = T; // Тип значения
+    using pointer = T*; // Тип указателя
+    using size_type = size_t; // Тип размера
 
+    // Шаблонная структура rebind, которая позволяет переиспользовать аллокатор для другого типа
     template <typename U>
     struct rebind {
         using other = MyAllocator<U, BlockSize>;
     };
 
     MyAllocator() noexcept {}
-
+    // Конструктор копирования для переиспользования аллокатора для другого типа
     template <typename U>
     MyAllocator(const MyAllocator<U, BlockSize>&) noexcept {}
-
+    
+    // Функция выделения памяти
     pointer allocate(size_type n) {
         if (n != 1)
             throw std::bad_alloc();
@@ -38,6 +40,7 @@ public:
         return p;
     }
 
+    // Функция освобождения памяти
     void deallocate(pointer p, size_type n) {
         if (n != 1) return;
         if (p == position_ - n) {
@@ -54,7 +57,7 @@ public:
     }
 
 private:
-    std::vector<pointer> data_;
-    pointer position_ = nullptr;
-    pointer end_ = nullptr;
+    std::vector<pointer> data_; // Вектор указателей на блоки памяти
+    pointer position_ = nullptr; // Указатель на текущую позицию в блоке памяти
+    pointer end_ = nullptr; // Указатель на конец блока памяти
 };

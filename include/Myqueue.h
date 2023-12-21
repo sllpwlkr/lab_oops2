@@ -12,6 +12,7 @@
 template <typename T, size_t BlockSize, typename Allocator = MyAllocator<T, BlockSize>>
 class MyQueue {
 private:
+    //структура, представляющая узел очереди
     struct Node {
         T data;
         Node* next;
@@ -19,6 +20,7 @@ private:
     };
 
 public:
+    // Реализация итератора
     class Iterator {
     public:
         using iterator_category = std::forward_iterator_tag;
@@ -29,6 +31,7 @@ public:
 
         Iterator(Node* p) : ptr(p) {}
 
+        //получение значения
         reference operator*() const {
             return ptr->data;
         }
@@ -37,6 +40,7 @@ public:
             return &(ptr->data);
         }
 
+        //перемещение итератора
         Iterator& operator++() {
             ptr = ptr->next;
             return *this;
@@ -48,6 +52,7 @@ public:
             return temp;
         }
 
+        //сравнение итераторов
         bool operator==(const Iterator& rhs) const {
             return ptr == rhs.ptr;
         }
@@ -65,7 +70,7 @@ public:
     using allocator_type = Allocator;
 
     MyQueue() : head(nullptr), tail(nullptr) {}
-
+    //добавляет новый элемент в конец очереди.
     void enqueue(const T& value) {
         Node* newNode = new Node(value);
         if (empty()) {
@@ -77,6 +82,7 @@ public:
         }
     }
 
+   //удаляет элемент из начала очереди.
     void dequeue() {
         if (empty()) {
             throw std::runtime_error("Queue is empty");
@@ -89,6 +95,7 @@ public:
         destroyNode(temp);
     }
 
+    //возвращает ссылку на первый элемент очереди.
     T& front() {
         if (empty()) {
             throw std::runtime_error("Queue is empty");
@@ -102,11 +109,11 @@ public:
         }
         return head->data;
     }
-
+    //проверяет, пуста ли очередь.
     bool empty() const {
         return head == nullptr;
     }
-
+    //возвращает количество элементов в очереди.
     size_t size() const {
         size_t count = 0;
         Node* current = head;
@@ -117,17 +124,19 @@ public:
         }
         return count;
     }
-
+    //возвращают итераторы в начало
     iterator begin() {
         return iterator(head);
     }
-
-    iterator end() {
-        return iterator(nullptr);
-    }
+    
 
     const_iterator begin() const {
         return const_iterator(head);
+    }
+
+    //возвращают итераторы в конец
+    iterator end() {
+        return iterator(nullptr);
     }
 
     const_iterator end() const {
@@ -135,7 +144,7 @@ public:
     }
 
 private:
-
+    //вызов деструктора и освобождение памяти
     void destroyNode(Node* node) {
         node->data.~T();
         int* ptr = allocator.allocate(node->data);
