@@ -1,10 +1,19 @@
 #include <iostream>
+#include <string>
+#include "Vector.h"
 
-#include "lib.h"
+
+#include "point.h"
+#include "figure.h"
+#include "trapezia.h"
+#include "romb.h"
+#include "pentagon.h"
 
 using namespace std;
 
-int main() {
-    cout << "Bruh: " << endl
-         << A() << endl;
+
+int main(){
+
+
+    return 0;
 }
