@@ -1,206 +1,133 @@
 #include <gtest/gtest.h>
-#include "trapezia.h"
-#include "romb.h"
-#include "pentagon.h"
-#include "Vector.h"
 #include <iostream>
+#include "Myqueue.h"
+#include "allocator.h"
 
-using namespace std;
-
-
-TEST(Trapezia_, test_TrapeziaInit_01)
+TEST(MyQueue_Test, test_01)
 {
-    Trapezia<int> tr;
-    Point<int> p(1,1), p2(2,3), p3(4,3), p6(5,1);
-    Point<int> p4(p6);
-    Trapezia<int> tr2(p,p2,p3,p4);
-    tr = tr2;
-    ASSERT_TRUE(p.x_ == 1);
-    ASSERT_TRUE(p2.x_ == 2);
-    ASSERT_TRUE(tr == tr2);
+    MyQueue<int, 10, MyAllocator<int, 10>> myQueue;
+    for (int i = 0; i < 10; ++i) {
+        myQueue.enqueue(i);
+    }
+    ASSERT_TRUE(  myQueue.size() == 10);
 }
 
-TEST(Trapezia_, test_TrapeziaInit_02)
+TEST(MyQueue_Test, test_02)
 {
-    Trapezia<int> tr;
-    Point<int> p(-1,-1), p2(-2,-3), p3(-4,-3), p6(-5,-1);
-    Point<int> p4;
-    p4 = p6;
-    Trapezia<int> tr2(p,p2,p3,p4);
-    tr = tr2;
-    ASSERT_TRUE(p4 == p6);
-    ASSERT_TRUE(!(p4 == p2));
-    ASSERT_TRUE(tr == tr2);
-}
-
-TEST(Trapezia_, test_TrapeziaSquare_01)
-{
-    Point<double> p(1.0,1.0), p2(2.0,3.0), p3(4.0,3.0), p6(5.0,1.0);
-    Point<double> p4(p6);
-    Trapezia<double> tr(p,p2,p3,p4);
-    ASSERT_TRUE(tr.square() == 6.0);
-}
-
-TEST(Trapezia_, test_TrapeziaSquare_02)
-{
-    Trapezia<int> tr;
-    Point<int> p(-1,-1), p2(-2,-3), p3(-4,-3), p6(-5,-1);
-    Point<int> p4;
-    p4 = p6;
-    Trapezia<int> tr2(p,p2,p3,p4);
-    tr = tr2;
-    ASSERT_TRUE(tr.square() == 6);
-    cout << "tr.square() 2   " << tr.square() << endl;
-}
-
-TEST(Trapezia_, test_TrapeziaCenter_01)
-{
-    Trapezia<int> tr;
-    Point<int> p(-1,-1), p2(-2,-3), p3(-4,-3), p6(-5,-1);
-    Point<int> p4;
-    p4 = p6;
-    Point<int> p10(-3,-2);
-    Trapezia<int> tr2(p,p2,p3,p4);
-    tr = tr2;
-    ASSERT_TRUE(tr.center() == p10);
-
-    cout << "tr.center() 1  " << tr.center() << endl;
-}
-
-TEST(Trapezia_, test_TrapeziaCenter_02)
-{
-    Trapezia<int> tr;
-    Point<int> p10;
-    ASSERT_TRUE(tr.center() == p10);
-}
-
-TEST(Romb_, test_RombInit_01)
-{
-    Trapezia<int> tr;
-    Point<int> p(2,-3), p2(3,-1), p3(4,-3), p6(3,-5);
-    Point<int> p4;
-    p4 = p6;
-    Trapezia<int> tr2(p,p2,p3,p4);
-    tr = tr2;
-    ASSERT_TRUE(p4 == p6);
-    ASSERT_TRUE(!(p4 == p2));
-    ASSERT_TRUE(tr == tr2);
-}
-
-TEST(Romb_, test_RombInit_02)
-{
-    Romb<int> tr;
-    Point<int> p(2,-3), p2(3,-1), p3(4,-3), p6(3,-5);
-    Point<int> p4(p6);
-    Romb<int> tr2(p,p2,p3,p4);
-    tr = tr2;
-    ASSERT_TRUE(p4.x_ == 3);
-    ASSERT_TRUE(p4.y_ == -5);
-    ASSERT_TRUE(tr == tr2);
-}
-
-TEST(Romb_, test_RombSquare_01)
-{
-    Point<int> p(2,-3), p2(3,-1), p3(4,-3), p6(3,-5);
-    Romb<int> tr2(p,p2,p3,p6);
-    int sqr = tr2;
-    ASSERT_TRUE(sqr == 4);
-}
-
-TEST(Romb_, test_RombSquare_02)
-{
-    Vector<int> arr;
-    Point<int> p(2,-3), p2(3,-1), p3(4,-3), p6(3,-5);
-    auto tr2 = std::make_unique<Romb<int>>(p,p2,p3,p6);
-    arr.push_back(std::move(tr2));
-
-    ASSERT_TRUE(arr.get(0)->square() == 4);
+    MyQueue<int, 10, MyAllocator<int, 10>> myQueue;
+    for (int i = 1; i < 11; ++i) {
+        myQueue.enqueue(i);
+    }
+    myQueue.dequeue();
+    ASSERT_TRUE( myQueue.size() == 9);
 
 }
-
-TEST(Romb_, test_RombCenter_01)
+TEST(MyQueue_Test, test_02_1)
 {
-    Vector<int> arr;
-    Point<int> p(2,-3), p2(3,-1), p3(4,-3), p6(3,-5),p7(3,-3);
-    auto tr2 = std::make_unique<Romb<int>>(p,p2,p3,p6);
-     arr.push_back(std::move(tr2));
-
-    ASSERT_TRUE(arr.get(0)->center() == p7);
+    MyQueue<int, 10, MyAllocator<int, 10>> myQueue;
+    for (int i = 1; i < 11; ++i) {
+        myQueue.enqueue(i);
+    }
+    myQueue.dequeue();
+    ASSERT_TRUE( myQueue.front() == 2);
 
 }
 
 
-TEST(Romb_, test_RombCenter_02)
+TEST(MyQueue_Test, test_03)
 {
-    Trapezia<float> tr;
-    Point<float> p, p2, p3, p6;
-    Point<float> p4(p6);
-    Trapezia<float> tr2(p,p2,p3,p4);
-    ASSERT_TRUE(tr.center() == p);
+    MyQueue<int, 10, MyAllocator<int, 10>> myQueue;
+    for (int i = 0; i < 10; ++i) {
+        myQueue.enqueue(i);
+    }
+    myQueue.empty();
+    ASSERT_FALSE(myQueue.empty());
 }
 
-TEST(Pentagon_, test_PentagonInit_01)
+TEST(MyQueue_Test, test_04)
 {
-    Pentagon<int> tr;
-    ASSERT_TRUE(tr.square() == 0);
-    Point<int> p(2,-3), p2(3,-1), p3(5,-3), p6(4,-4), p7(4,-4);
-    Pentagon<int> tr2(p,p2,p3,p6,p7);
-    tr = tr2;
-    ASSERT_TRUE(tr == tr2);
-    ASSERT_TRUE(tr.square() != 0);
+    MyQueue<int, 10, MyAllocator<int, 10>> myQueue;
+    for (int i = 0; i < 10; ++i) {
+        myQueue.enqueue(i);
+    }
+    myQueue.enqueue(500);
+    ASSERT_TRUE( myQueue.size() == 11);
 }
 
-TEST(Pentagon_, test_PentagonInit_02)
+TEST(MyQueue_Test_iterator, test_01)
 {
-    Pentagon<int> tr;
-    Point<int> p(2,-3), p2(3,-1), p3(5,-3), p6(4,-4), p7(4,-4);
-    Pentagon<int> tr2(p,p2,p3,p6,p7);
-    tr = tr2;
-    ASSERT_TRUE(p.x_ == 2);
-    ASSERT_TRUE(p.y_ == -3);
-    ASSERT_TRUE(tr == tr2);
-}
+    MyQueue<int, 10, MyAllocator<int, 10>> queue;
+    for (int i = 0; i < 10; ++i) {
+        queue.enqueue(i);
+    }
+    int j = 0;
 
-TEST(Pentagon_, test_PentagonSquare_01)
-{
-    Point<float> p(2,-3), p2(3,-1), p3(5,-3), p6(4,-4), p7(4,-4);
-    Pentagon<float> tr2(p,p2,p3,p6,p7);
-    float sqr = tr2;
-    ASSERT_TRUE(sqr != 0);
-    std::cout << sqr << std::endl;
+    for (MyQueue<int, 10, MyAllocator<int, 10>>::iterator it = queue.begin(); it != queue.end(); ++it) {
+        ASSERT_TRUE(*it == j);
+        ++j;
+    }
 
 }
 
-TEST(Pentagon_, test_PentagonSquare_02)
+TEST(MyQueue_Test_iterator, test_02)
 {
-    Vector<int> arr;
-    Point<int> p(2,-3), p2(3,-1), p3(5,-3), p6(4,-4), p7(4,-4);
-    auto tr2 = std::make_unique<Pentagon<int>>(p,p2,p3,p6,p7);
-    arr.push_back(std::move(tr2));
+    MyQueue<int, 10, MyAllocator<int, 10>> queue;
+    for (int i = 0; i < 10; ++i) {
+        queue.enqueue(i);
+    }
+    int j = 0;
+    MyQueue<int, 10, MyAllocator<int, 10>>::iterator it = queue.begin();
+    ASSERT_TRUE(*it == 0);
 
-    ASSERT_TRUE(arr.get(0)->square() != 0);
+    it = ++(++(++it));
+
+    ASSERT_TRUE(*it == 3);
+}
+
+TEST(MyQueue_Test_iterator, test_03)
+{
+    MyQueue<int, 10, MyAllocator<int, 10>> queue;
+    for (int i = 0; i < 10; ++i) {
+        queue.enqueue(i);
+    }
+    int j = 0;
+    MyQueue<int, 10, MyAllocator<int, 10>>::iterator it = queue.begin();
+    it = ++it;
+    ASSERT_TRUE(*(it) == 1);
+}
+
+TEST(MyQueue_Test_iterator, test_04)
+{
+    MyQueue<int, 10, MyAllocator<int, 10>> queue;
+    for (int i = 0; i < 10; ++i) {
+        queue.enqueue(i);
+    }
+    int j = 0;
+
+    MyQueue<int, 10, MyAllocator<int, 10>>::iterator it = queue.begin();
+    ASSERT_FALSE(*it != 0);
 
 }
 
-TEST(Pentagon_, test_PentagonCenter_01)
+TEST(MyQueue_Test_All, test_01)
 {
-    Vector<int> arr;
-    Point<int> p(2,-3), p2(3,-1), p3(5,-3), p6(4,-4), p7(4,-4);
-    auto tr2 = std::make_unique<Pentagon<int>>(p,p2,p3,p6,p7);
-    arr.push_back(std::move(tr2));
-    Point<int> p10;
+    std::map<int, int, std::less<>, MyAllocator<std::pair<const int, int>, 1000>> myMap;
 
-    ASSERT_TRUE(!(arr.get(0)->center() == p10));
+    MyQueue<int, 100, MyAllocator<int, 100>> queue;
+    for (int i = 0; i < 100; ++i) {
+        queue.enqueue(i);
+    }
 
+    MyQueue<int, 100, MyAllocator<int, 100>>::iterator it = queue.begin();
+
+    for (int i = 0; i < 10; ++i) {
+        myMap.emplace(i, *it);
+        ASSERT_TRUE(*it == i);
+        ASSERT_TRUE(myMap[i] == *it);
+        ++it;
+    }
 }
 
-TEST(Pentagon_, test_PentagonCenter_02)
-{
-    Pentagon<int> tr;
-    Point<int> p, p2, p3, p6, p7;
-    Pentagon<int> tr2(p,p2,p3,p6,p7);
-    ASSERT_TRUE(tr.center() == p);
-}
 
 int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
