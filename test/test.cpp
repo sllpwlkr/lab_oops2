@@ -1,135 +1,190 @@
 #include <gtest/gtest.h>
-#include <iostream>
-#include "Myqueue.h"
-#include "allocator.h"
+#include "wolf.hpp"
+#include "robber.hpp"
+#include "bear.hpp"
+#include "npc.hpp"
 
-TEST(MyQueue_Test, test_01)
-{
-    MyQueue<int, 10, MyAllocator<int, 10>> myQueue;
-    for (int i = 0; i < 10; ++i) {
-        myQueue.enqueue(i);
-    }
-    ASSERT_TRUE(  myQueue.size() == 10);
+
+TEST(Wolf_test, _01) {
+    Wolf wolf(40,50);
+    wolf.print();
 }
 
-TEST(MyQueue_Test, test_02)
-{
-    MyQueue<int, 10, MyAllocator<int, 10>> myQueue;
-    for (int i = 1; i < 11; ++i) {
-        myQueue.enqueue(i);
-    }
-    myQueue.dequeue();
-    ASSERT_TRUE( myQueue.size() == 9);
+TEST(Wolf_test, _02) {
+    std::shared_ptr<NPC> wolf= std::make_shared<Wolf>(40, 50);
+    std::shared_ptr<NPC> bear= std::make_shared<Bear>(40, 10);
+    std::shared_ptr<NPC> robber= std::make_shared<Robber>(30, 45);
 
-}
-TEST(MyQueue_Test, test_02_1)
-{
-    MyQueue<int, 10, MyAllocator<int, 10>> myQueue;
-    for (int i = 1; i < 11; ++i) {
-        myQueue.enqueue(i);
-    }
-    myQueue.dequeue();
-    ASSERT_TRUE( myQueue.front() == 2);
-
+    //success = defender->accept(attacker);
+    bool successb = bear->accept(wolf);
+    bool successr = robber->accept(wolf);
+    bool successw = wolf->accept(wolf);
+    ASSERT_FALSE(successb);
+    ASSERT_FALSE(successw);
+    ASSERT_TRUE(successr);
 }
 
+TEST(Wolf_test, _03) {
+    std::shared_ptr<Wolf> wolf= std::make_shared<Wolf>(40, 50);
+    std::shared_ptr<Bear> bear= std::make_shared<Bear>(40, 10);
+    std::shared_ptr<Robber> robber= std::make_shared<Robber>(30, 45);
 
-TEST(MyQueue_Test, test_03)
-{
-    MyQueue<int, 10, MyAllocator<int, 10>> myQueue;
-    for (int i = 0; i < 10; ++i) {
-        myQueue.enqueue(i);
-    }
-    myQueue.empty();
-    ASSERT_FALSE(myQueue.empty());
+    //success = defender->accept(attacker);
+    bool successb = bear->fight(wolf);
+    bool successr = robber->fight(wolf);
+    bool successw = wolf->fight(wolf);
+    ASSERT_FALSE(successr);
+    ASSERT_FALSE(successw);
+    ASSERT_TRUE(successb);
 }
 
-TEST(MyQueue_Test, test_04)
-{
-    MyQueue<int, 10, MyAllocator<int, 10>> myQueue;
-    for (int i = 0; i < 10; ++i) {
-        myQueue.enqueue(i);
-    }
-    myQueue.enqueue(500);
-    ASSERT_TRUE( myQueue.size() == 11);
-}
+TEST(Wolf_test, _04) {
 
-TEST(MyQueue_Test_iterator, test_01)
-{
-    MyQueue<int, 10, MyAllocator<int, 10>> queue;
-    for (int i = 0; i < 10; ++i) {
-        queue.enqueue(i);
-    }
-    int j = 0;
-
-    for (MyQueue<int, 10, MyAllocator<int, 10>>::iterator it = queue.begin(); it != queue.end(); ++it) {
-        ASSERT_TRUE(*it == j);
-        ++j;
-    }
+    Wolf wolf(40,50);
+    std::cout << wolf << std::endl;
 
 }
 
-TEST(MyQueue_Test_iterator, test_02)
-{
-    MyQueue<int, 10, MyAllocator<int, 10>> queue;
-    for (int i = 0; i < 10; ++i) {
-        queue.enqueue(i);
-    }
-    int j = 0;
-    MyQueue<int, 10, MyAllocator<int, 10>>::iterator it = queue.begin();
-    ASSERT_TRUE(*it == 0);
-
-    it = ++(++(++it));
-
-    ASSERT_TRUE(*it == 3);
+TEST(Robber_test, _01) {
+    Robber robber(40,10);
+    robber.print();
 }
 
-TEST(MyQueue_Test_iterator, test_03)
-{
-    MyQueue<int, 10, MyAllocator<int, 10>> queue;
-    for (int i = 0; i < 10; ++i) {
-        queue.enqueue(i);
-    }
-    int j = 0;
-    MyQueue<int, 10, MyAllocator<int, 10>>::iterator it = queue.begin();
-    it = ++it;
-    ASSERT_TRUE(*(it) == 1);
+TEST(Robber_test, _02) {
+    std::shared_ptr<NPC> wolf= std::make_shared<Wolf>(40, 50);
+    std::shared_ptr<NPC> bear= std::make_shared<Bear>(40, 10);
+    std::shared_ptr<NPC> robber= std::make_shared<Robber>(30, 45);
+
+    //success = defender->accept(attacker);
+    bool successb = bear->accept(robber);
+    bool successr = robber->accept(robber);
+    bool successw = wolf->accept(robber);
+    ASSERT_FALSE(successr);
+    ASSERT_FALSE(successw);
+    ASSERT_TRUE(successb);
 }
 
-TEST(MyQueue_Test_iterator, test_04)
-{
-    MyQueue<int, 10, MyAllocator<int, 10>> queue;
-    for (int i = 0; i < 10; ++i) {
-        queue.enqueue(i);
-    }
-    int j = 0;
+TEST(Robber_test, _03) {
+    std::shared_ptr<Wolf> wolf= std::make_shared<Wolf>(40, 50);
+    std::shared_ptr<Bear> bear= std::make_shared<Bear>(40, 10);
+    std::shared_ptr<Robber> robber= std::make_shared<Robber>(30, 45);
 
-    MyQueue<int, 10, MyAllocator<int, 10>>::iterator it = queue.begin();
-    ASSERT_FALSE(*it != 0);
+    //success = defender->accept(attacker);
+    bool successr = robber->fight(wolf);
+    bool successrr = robber->fight(bear);
+    ASSERT_FALSE(successr);
+    ASSERT_TRUE(successrr);
+}
+
+TEST(Robber_test, _04) {
+    Robber robber(40,10);
+    std::cout << robber << std::endl;
+}
+
+TEST(Bear_test, _01) {
+    Bear bear(30,45);
+    bear.print();
+}
+
+TEST(Bear_test, _02) {
+    std::shared_ptr<NPC> wolf= std::make_shared<Wolf>(40, 50);
+    std::shared_ptr<NPC> bear= std::make_shared<Bear>(40, 10);
+    std::shared_ptr<NPC> robber= std::make_shared<Robber>(30, 45);
+
+    //success = defender->accept(attacker);
+    bool successb = bear->accept(bear);
+    bool successr = robber->accept(bear);
+    bool successw = wolf->accept(bear);
+    ASSERT_FALSE(successb);
+    ASSERT_FALSE(successr);
+    ASSERT_TRUE(successw);
+}
+
+TEST(Bear_test, _03) {
+    std::shared_ptr<Wolf> wolf= std::make_shared<Wolf>(40, 50);
+    std::shared_ptr<Bear> bear= std::make_shared<Bear>(40, 10);
+    std::shared_ptr<Robber> robber= std::make_shared<Robber>(30, 45);
+
+    //success = defender->accept(attacker);
+    bool successb = bear->fight(wolf);
+    bool successbb = robber->fight(bear);
+    ASSERT_TRUE(successb);
+    ASSERT_TRUE(successbb);
+}
+
+TEST(Bear_test, _04) {
+    Bear bear(30,45);
+    std::cout << bear << std::endl;
+}
+
+TEST(npc_test, _01) {
+    std::set<std::shared_ptr<NPC>> array;
+
+    std::shared_ptr<Wolf> wolf= std::make_shared<Wolf>(40, 50);
+    std::shared_ptr<Bear> bear= std::make_shared<Bear>(40, 10);
+    std::shared_ptr<Robber> robber= std::make_shared<Robber>(30, 45);
+
+    array.insert(wolf);
+    array.insert(bear);
+    array.insert(robber);
+
+    size_t distance = 20;
+    std::set<std::shared_ptr<NPC>> dead_list;
+
+    for (const auto &attacker : array)
+        for (const auto &defender : array)
+            if ((attacker != defender) && (attacker->is_close(defender, distance)))
+            {
+                bool success{false};
+                success = defender->accept(attacker);
+                
+                if (success)
+                    dead_list.insert(defender);
+            }
+
+    std::cout << "killed ☠️ : " << dead_list.size() << std::endl;
+
 
 }
 
-TEST(MyQueue_Test_All, test_01)
-{
-    std::map<int, int, std::less<>, MyAllocator<std::pair<const int, int>, 1000>> myMap;
+TEST(npc_test, _02) {
+    std::set<std::shared_ptr<NPC>> array;
 
-    MyQueue<int, 100, MyAllocator<int, 100>> queue;
-    for (int i = 0; i < 100; ++i) {
-        queue.enqueue(i);
-    }
+    std::shared_ptr<Wolf> wolf= std::make_shared<Wolf>(40, 50);
+    std::shared_ptr<Bear> bear= std::make_shared<Bear>(40, 10);
+    std::shared_ptr<Robber> robber= std::make_shared<Robber>(30, 45);
 
-    MyQueue<int, 100, MyAllocator<int, 100>>::iterator it = queue.begin();
+    array.insert(wolf);
+    array.insert(bear);
+    array.insert(robber);
 
-    for (int i = 0; i < 10; ++i) {
-        myMap.emplace(i, *it);
-        ASSERT_TRUE(*it == i);
-        ASSERT_TRUE(myMap[i] == *it);
-        ++it;
-    }
+    size_t distance = 20;
+    std::set<std::shared_ptr<NPC>> dead_list;
+
+    for (const auto &attacker : array)
+        for (const auto &defender : array)
+            if ((attacker != defender) && (attacker->is_close(defender, distance)))
+            {
+                bool success{false};
+                success = defender->accept(attacker);
+                
+                if (success)
+                    dead_list.insert(defender);
+            }
+
+    for (auto &d : dead_list)
+            array.erase(d);
+
+    std::cout << "Survivors 🎉❤️ : " << std::endl;
+
+    for (auto &n : array)
+        n->print();
+
 }
 
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv){
+
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
 }
